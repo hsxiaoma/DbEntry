@@ -1,5 +1,5 @@
 
-msbuild /property:Configuration=Release src\DbEntry.Net.sln
+C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe /property:Configuration=Release src\DbEntry.Net.sln
 
 copy src\Leafing.Core\bin\Release\Leafing.Core.dll bin /y
 copy src\Leafing.Data\bin\Release\Leafing.Data.dll bin /y

@@ -462,5 +462,72 @@ namespace Leafing.Data.Model
 
         #endregion
 
+        #region GetPager
+
+        public DataTable GetPagerDt(string tbName, int page, int pagesize, out int totalcount)
+        {
+            return GetPagerDt(tbName, page, pagesize, "", out totalcount);
+        }
+
+        public DataTable GetPagerDt(string tbName, int page, int pagesize, string filter, out int totalcount)
+        {
+            return GetPagerDt(tbName, page, pagesize, filter, "Id Desc", out totalcount);
+
+        }
+
+        public DataTable GetPagerDt(string tbName, int page, int pagesize, string filter, string orderby, out int totalcount)
+        {
+            return GetPagerDt(tbName, page, pagesize, filter, orderby, "*", out totalcount);
+
+        }
+
+        public DataTable GetPagerDt(string tbName, int page, int pagesize, string filter, string orderby, string fields, out int totalcount)
+        {
+            return GetPagerDt(tbName, page, pagesize, filter, orderby, fields, "Id", out totalcount);
+
+        }
+
+
+        public DataTable GetPagerDt(string tbName, int page, int pagesize, string filter, string orderby, string fields, string key, out int totalcount)
+        {
+            return GetPagerDt(tbName, page, pagesize, filter, orderby, fields, 10000000, key, "", out totalcount);
+
+        }
+
+        public DataTable GetPagerDt(string tbName, int page, int pagesize, string filter, string orderby, string fields, int maxcount, out int totalcount)
+        {
+
+            return GetPagerDt(tbName, page, pagesize, filter, orderby, fields, maxcount, "Id", "", out totalcount);
+
+        }
+
+        public DataTable GetPagerDt(string tbName, int page, int pagesize, string filter, string orderby, string fields, int maxcount, string key, out int totalcount)
+        {
+
+            return GetPagerDt(tbName, page, pagesize, filter, orderby, fields, maxcount, key, "", out totalcount);
+
+        }
+
+        public DataTable GetPagerDt(string tbName, int page, int pagesize, string filter, string orderby, string fields, int maxcount, string key, string groupby, out int totalcount)
+        {
+
+            var sql = new SqlStatement("upPager",
+                new DataParameter("@Tables", tbName),
+                new DataParameter("@Sort", orderby),
+                new DataParameter("@Fields", fields),
+                new DataParameter("@Filter", filter),
+                new DataParameter("@PageIndex", page),
+                new DataParameter("@PageSize", pagesize),
+                new DataParameter("@MaxCount", maxcount),
+                new DataParameter("@PK", key),
+                new DataParameter("@TotalResults", 0, typeof(int), ParameterDirection.Output),
+                new DataParameter("@Group", groupby)
+            );
+            var ds = Provider.ExecuteDataset(sql);
+            totalcount = Convert.ToInt32(sql.Parameters[8].Value);
+            return ds.Tables[0];
+        }
+        #endregion
+
     }
 }

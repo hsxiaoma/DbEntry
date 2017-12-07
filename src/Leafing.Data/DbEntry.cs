@@ -350,5 +350,126 @@ namespace Leafing.Data
         }
 
         #endregion
+
+        #region 个人修改部分
+
+        public static string TableName(Type type)
+        {
+            return ModelContext.GetInstance(type).Info.From.MainTableName;
+        }
+
+        #region GetPager
+        /// <summary>
+        /// 使用upPager存储过程返回分页数据
+        /// </summary>
+        /// <param name="dbObjectType">当前操作的对象</param>
+        /// <param name="page">页码</param>
+        /// <param name="pagesize">分页大小</param>
+        /// <param name="totalcount">返回总记录数</param>
+        /// <returns>返回DataTable对象</returns>
+        public static DataTable GetPager(Type dbObjectType, int page, int pagesize, out int totalcount)
+        {
+            return GetPager(dbObjectType, page, pagesize, "", "Id Desc", "*", out totalcount);
+        }
+        /// <summary>
+        /// 使用upPager存储过程返回分页数据
+        /// </summary>
+        /// <param name="dbObjectType">当前操作的对象</param>
+        /// <param name="page">页码</param>
+        /// <param name="pagesize">分页大小</param>
+        /// <param name="filter">条件</param>
+        /// <param name="totalcount">返回总记录数</param>
+        /// <returns>返回DataTable对象</returns>
+        public static DataTable GetPager(Type dbObjectType, int page, int pagesize, string filter, out int totalcount)
+        {
+            return GetPager(dbObjectType, page, pagesize, filter, "Id Desc", "*", out totalcount);
+        }
+        /// <summary>
+        /// 使用upPager存储过程返回分页数据
+        /// </summary>
+        /// <param name="dbObjectType">当前操作的对象</param>
+        /// <param name="page">页码</param>
+        /// <param name="pagesize">分页大小</param>
+        /// <param name="filter">条件</param>
+        /// <param name="orderby">排序,不需要order by</param>
+        /// <param name="totalcount">返回总记录数</param>
+        /// <returns>返回DataTable对象</returns>
+        public static DataTable GetPager(Type dbObjectType, int page, int pagesize, string filter, string orderby, out int totalcount)
+        {
+            return GetPager(dbObjectType, page, pagesize, filter, orderby, "*", out totalcount);
+        }
+        /// <summary>
+        /// 使用upPager存储过程返回分页数据
+        /// </summary>
+        /// <param name="dbObjectType">当前操作的对象</param>
+        /// <param name="page">页码</param>
+        /// <param name="pagesize">分页大小</param>
+        /// <param name="filter">条件</param>
+        /// <param name="orderby">排序,不需要order by</param>
+        /// <param name="fields">选择输出的字段,默认为*</param>
+        /// <param name="totalcount">返回总记录数</param>
+        /// <returns>返回DataTable对象</returns>
+        public static DataTable GetPager(Type dbObjectType, int page, int pagesize, string filter, string orderby, string fields, out int totalcount)
+        {
+            return GetPager(dbObjectType, page, pagesize, filter, orderby, fields, "Id", out totalcount);
+        }
+        /// <summary>
+        /// 使用upPager存储过程返回分页数据
+        /// </summary>
+        /// <param name="dbObjectType">当前操作的对象</param>
+        /// <param name="page">页码</param>
+        /// <param name="pagesize">分页大小</param>
+        /// <param name="filter">条件</param>
+        /// <param name="orderby">排序,不需要order by</param>
+        /// <param name="fields">选择输出的字段,默认为*</param>
+        /// <param name="key">主键名称,默认为Id</param>
+        /// <param name="totalcount">返回总记录数</param>
+        /// <returns>返回DataTable对象</returns>
+        public static DataTable GetPager(Type dbObjectType, int page, int pagesize, string filter, string orderby, string fields, string key, out int totalcount)
+        {
+            return GetPager(dbObjectType, page, pagesize, filter, orderby, fields, 10000000, "Id", "", out totalcount);
+        }
+        /// <summary>
+        /// 使用upPager存储过程返回分页数据
+        /// </summary>
+        /// <param name="dbObjectType">当前操作的对象</param>
+        /// <param name="page">页码</param>
+        /// <param name="pagesize">分页大小</param>
+        /// <param name="filter">条件</param>
+        /// <param name="orderby">排序,不需要order by</param>
+        /// <param name="fields">选择输出的字段,默认为*</param>
+        /// <param name="maxcount">最大显示记录数,相当于top num,默认10000000</param>
+        /// <param name="key">主键名称,默认为Id</param>
+        /// <param name="groupby">分组条件</param>
+        /// <param name="totalcount">返回总记录数</param>
+        /// <returns>返回DataTable对象</returns>
+        public static DataTable GetPager(Type dbObjectType, int page, int pagesize, string filter, string orderby, string fields, int maxcount, string key, string groupby, out int totalcount)
+        {
+            return GetOperator(dbObjectType).GetPagerDt(TableName(dbObjectType), page, pagesize, filter, orderby, fields, maxcount, key, groupby, out totalcount);
+        }
+
+        /// <summary>
+        /// 使用upPager存储过程返回分页数据
+        /// </summary>
+        /// <param name="tableName">表名,可使用多表查询</param>
+        /// <param name="dbObjectType">当前操作的对象</param>
+        /// <param name="page">页码</param>
+        /// <param name="pagesize">分页大小</param>
+        /// <param name="filter">条件</param>
+        /// <param name="orderby">排序,不需要order by</param>
+        /// <param name="fields">选择输出的字段,默认为*</param>
+        /// <param name="maxcount">最大显示记录数,相当于top num,默认10000000</param>
+        /// <param name="key">主键名称,默认为Id</param>
+        /// <param name="groupby">分组条件</param>
+        /// <param name="totalcount">返回总记录数</param>
+        /// <returns>返回DataTable对象</returns>
+        public static DataTable GetPager(string tableName, Type dbObjectType, int page, int pagesize, string filter, string orderby, string fields, int maxcount, string key, string groupby, out int totalcount)
+        {
+            return GetOperator(dbObjectType).GetPagerDt(tableName, page, pagesize, filter, orderby, fields, maxcount, key, groupby, out totalcount);
+        }
+        #endregion
+
+        #endregion
+
     }
 }
